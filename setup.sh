@@ -84,12 +84,32 @@ EOF
         echo "输入无效，请输入 'yes' 或 'no'。"
         exit 1
     fi
+
+    # 检查是否存在此任务
+    crontab -l | grep -q 'systemctl restart frpc.service &> /dev/null'
+    if [ $? -ne 0 ]; then
+      # 如果不存在，则添加任务
+      (crontab -l; echo '0 1 * * * systemctl restart frpc.service &> /dev/null') | crontab -
+      echo "0 1 * * * systemctl restart frpc.service 任务已添加到 root 的 crontab 中。"
+    else
+      echo "systemctl restart frpc.service 任务已存在于 root 的 crontab 中。"
+    fi
 }
 
 # 功能3: easytier
 function easytier {
     apt install curl unzip
-    wget -O /tmp/easytier.sh "https://raw.githubusercontent.com/EasyTier/EasyTier/main/script/install.sh" && bash /tmp/easytier.sh install
+    
+    read -p "是否是要更新easytier? (yes/y/no/n,默认no): " input
+    input=${input:-no}
+    if [[ "$input" == "yes" || "$input" == "y" ]]; then
+        wget -O /tmp/easytier.sh "https://raw.githubusercontent.com/EasyTier/EasyTier/main/script/install.sh" && bash /tmp/easytier.sh update
+    elif [[ "$input" == "no" || "$input" == "n" ]]; then
+        wget -O /tmp/easytier.sh "https://raw.githubusercontent.com/EasyTier/EasyTier/main/script/install.sh" && bash /tmp/easytier.sh install
+    else
+        echo "输入无效，请输入 'yes' 或 'no'。"
+        exit 1
+    fi
     
     # 询问用户是否要安装公共服务器
     read -p "是否是要安装公共server? (yes/y/no/n,默认no): " input
@@ -185,7 +205,7 @@ function derper {
       (crontab -l; echo '0 */12 * * * docker restart derper &> /dev/null') | crontab -
       echo "0 */12 * * * docker restart derper 任务已添加到 root 的 crontab 中。"
     else
-      echo "docker restart 任务已存在于 root 的 crontab 中。"
+      echo "docker restart derper 任务已存在于 root 的 crontab 中。"
     fi
 }
 
