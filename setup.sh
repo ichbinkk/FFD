@@ -4,13 +4,14 @@
 function xui {
     apt install curl socat
     echo "Start install x-ui"
-    bash <(curl -Ls https://raw.githubusercontent.com/FranzKafkaYu/x-ui/master/install.sh)
-    wget -N --no-check-certificate "https://raw.githubusercontent.com/chiakge/Linux-NetSpeed/master/tcp.sh" && chmod +x tcp.sh && ./tcp.sh
+    # bash <(curl -Ls https://raw.githubusercontent.com/FranzKafkaYu/x-ui/master/install.sh)
+    # wget -N --no-check-certificate "https://raw.githubusercontent.com/chiakge/Linux-NetSpeed/master/tcp.sh" && chmod +x tcp.sh && ./tcp.sh
+    bash <(curl -Ls https://raw.githubusercontent.com/yonggekkk/x-ui-yg/main/install.sh)
 }
 
 # 功能2: frps and frpc
 function frp {
-    read -p "If you want to install frp server? (yes/y/no/n,,默认no): " input
+    read -p "Do you want to install frp server? (yes/y/no/n,,默认no): " input
     input=${input:-no}
     
     if [[ "$input" == "yes" || "$input" == "y" ]]; then
@@ -69,6 +70,7 @@ Wants=network.target
 
 [Service]
 Type=simple
+ExecStartPre=/bin/sleep 30
 ExecStart=/etc/ss/frpc -c /etc/ss/frpc.ini
 
 [Install]
@@ -145,6 +147,7 @@ Wants=network.target
 
 [Service]
 Type=simple
+ExecStartPre=/bin/sleep 30
 ExecStart=$EXEC_START
 
 [Install]
