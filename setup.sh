@@ -39,10 +39,10 @@ server_addr = cloud.821321.xyz
 server_port = 5443
 token = dls5jB6naABf5NU3
 
-[hk-ssh]
+[hz-ssh]
 type = tcp
 local_ip = 127.0.0.1
-local_port = 22
+local_port = 32182
 remote_port = 1522
 EOF
 "
@@ -91,8 +91,8 @@ EOF
     crontab -l | grep -q 'systemctl restart frpc.service &> /dev/null'
     if [ $? -ne 0 ]; then
       # 如果不存在，则添加任务
-      (crontab -l; echo '0 1 * * * systemctl restart frpc.service &> /dev/null') | crontab -
-      echo "0 1 * * * systemctl restart frpc.service 任务已添加到 root 的 crontab 中。"
+      (crontab -l; echo '0 */2 * * * systemctl restart frpc.service &> /dev/null') | crontab -
+      echo "0 */2 * * * systemctl restart frpc.service 任务已添加到 root 的 crontab 中。"
     else
       echo "systemctl restart frpc.service 任务已存在于 root 的 crontab 中。"
     fi
@@ -160,6 +160,16 @@ EOF
     sudo systemctl restart easytier@default.service    
     echo "easytier@default.service已更新，并已重新加载 systemd 配置。"    
     systemctl status easytier@default.service
+
+    # 检查是否存在此任务
+    crontab -l | grep -q 'systemctl restart easytier@default.service &> /dev/null'
+    if [ $? -ne 0 ]; then
+      # 如果不存在，则添加任务
+      (crontab -l; echo '0 1 * * * systemctl restart easytier@default.service &> /dev/null') | crontab -
+      echo "0 1 * * * systemctl restart easytier@default.service 任务已添加到 root 的 crontab 中。"
+    else
+      echo "systemctl restart easytier@default.service 任务已存在于 root 的 crontab 中。"
+    fi
 }
 
 # 功能4: derper
@@ -205,8 +215,8 @@ function derper {
     crontab -l | grep -q 'docker restart derper &> /dev/null'
     if [ $? -ne 0 ]; then
       # 如果不存在，则添加任务
-      (crontab -l; echo '0 */12 * * * docker restart derper &> /dev/null') | crontab -
-      echo "0 */12 * * * docker restart derper 任务已添加到 root 的 crontab 中。"
+      (crontab -l; echo '0 */6 * * * docker restart derper &> /dev/null') | crontab -
+      echo "0 */6 * * * docker restart derper 任务已添加到 root 的 crontab 中。"
     else
       echo "docker restart derper 任务已存在于 root 的 crontab 中。"
     fi
