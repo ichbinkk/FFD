@@ -70,7 +70,7 @@ Wants=network.target
 
 [Service]
 Type=simple
-ExecStartPre=/bin/sleep 30
+ExecStartPre=/bin/sleep 10
 ExecStart=/etc/ss/frpc -c /etc/ss/frpc.ini
 
 [Install]
@@ -147,7 +147,7 @@ Wants=network.target
 
 [Service]
 Type=simple
-ExecStartPre=/bin/sleep 30
+ExecStartPre=/bin/sleep 10
 ExecStart=$EXEC_START
 
 [Install]
