@@ -119,7 +119,7 @@ function easytier {
         
     # 根据用户输入选择相应的 ExecStart 配置
     if [[ "$input" == "yes" || "$input" == "y" ]]; then
-        EXEC_START="easytier-core --network-name kkworld --network-secret 22022Wk* --relay-network-whitelist kkworld"
+        EXEC_START="/opt/easytier/easytier-core --network-name kkworld --network-secret 22022Wk* --relay-network-whitelist kkworld"
         ip=`curl -s ifconfig.me`
         echo "New peer address is:"
         echo "tcp://"$ip":11010"
@@ -130,7 +130,7 @@ function easytier {
       	ip4=${ip4:-158.132.16.2}
         read -p "IP range to route? (10.0.0.0): " route
       	route=${route:-10.0.0.0}
-        EXEC_START="easytier-core --ipv4 "$ip4" --network-name kkworld --network-secret 22022Wk* --peers tcp://"$domain":11010 --disable-p2p -n "$route"/24"        
+        EXEC_START="/opt/easytier/easytier-core --ipv4 "$ip4" --network-name kkworld --network-secret 22022Wk* --peers tcp://"$domain":11010 --disable-p2p -n "$route"/24"        
     else
         echo "输入无效，请输入 'yes' 或 'no'。"
         exit 1
