@@ -119,7 +119,7 @@ function easytier {
         
     # 根据用户输入选择相应的 ExecStart 配置
     if [[ "$input" == "yes" || "$input" == "y" ]]; then
-        EXEC_START="/opt/easytier/easytier-core --network-name kkworld --network-secret 22022Wk* --relay-network-whitelist kkworld"
+        EXEC_START="/opt/easytier/easytier-core --ipv4 158.132.16.1 --network-name kkworld --network-secret 22022Wk* --relay-network-whitelist kkworld --vpn-portal wg://0.0.0.0:11013/10.14.14.0/24"
         ip=`curl -s ifconfig.me`
         echo "New peer address is:"
         echo "tcp://"$ip":11010"
