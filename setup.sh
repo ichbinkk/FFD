@@ -35,19 +35,19 @@ function frp {
         # 写入新的内容到服务文件
         sudo bash -c "cat > $FILE_PATH << EOF
 [common]
-server_addr = cloud.821321.xyz
+server_addr = v1.821321.xyz
 server_port = 5443
 token = dls5jB6naABf5NU3
 
-[hz-ssh]
+[ntu-ssh]
 type = tcp
 local_ip = 127.0.0.1
-local_port = 32182
-remote_port = 1522
+local_port = 22
+remote_port = 10022
 EOF
 "
         
-        nano "$FILE_PATH"
+        # nano "$FILE_PATH"
         
         # 确认文件已创建并显示内容
         if [[ -s "$FILE_PATH" ]]; then
