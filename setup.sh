@@ -1,5 +1,7 @@
 #!/bin/bash
 
+HOSTNAME=$(hostname)
+
 # 功能1: 安装x-ui，开启bbr
 function xui {
     apt install curl socat
@@ -28,22 +30,33 @@ function frp {
         
         wget -P /etc/ss -N --no-check-certificate https://github.com/ichbinkk/FFD/releases/download/v1.0/frpc
         chmod +x /etc/ss/frpc
+
+        rand_p=$((RANDOM % 55536 + 10000))
         
         #step1 创建frpc.ini
         FILE_PATH="/etc/ss/frpc.ini"
+
+        read -p "Server address (默认 cloud.821321.xyz): " addr
+        addr=${addr:-cloud.821321.xyz}
+ 
+        read -p "Local port (默认 22): " lp
+        lp=${lp:-22}
+     
+        read -p "Remote port (默认随机): " rp
+        rp=${rp:-$rand_p}
         
         # 写入新的内容到服务文件
         sudo bash -c "cat > $FILE_PATH << EOF
 [common]
-server_addr = v1.821321.xyz
+server_addr = $addr
 server_port = 5443
 token = dls5jB6naABf5NU3
 
-[ntu-ssh]
+[$HOSTNAME-$lp]
 type = tcp
 local_ip = 127.0.0.1
-local_port = 22
-remote_port = 10022
+local_port = $lp
+remote_port = $rp
 EOF
 "
         
@@ -130,7 +143,8 @@ function easytier {
       	ip4=${ip4:-158.132.16.2}
         read -p "IP range to route? (10.0.0.0): " route
       	route=${route:-10.0.0.0}
-        EXEC_START="/opt/easytier/easytier-core --ipv4 "$ip4" --network-name kkworld --network-secret 22022Wk* --peers tcp://"$domain":11010 --disable-p2p -n "$route"/24"        
+        EXEC_START="/opt/easytier/easytier-core --ipv4 "$ip4" --network-name kkworld --network-secret 22022Wk* --peers tcp://"$domain":11010 -n "$route"/24"
+        # EXEC_START="/opt/easytier/easytier-core --ipv4 "$ip4" --network-name kkworld --network-secret 22022Wk* --peers tcp://"$domain":11010 --disable-p2p -n "$route"/24"        
     else
         echo "输入无效，请输入 'yes' 或 'no'。"
         exit 1
