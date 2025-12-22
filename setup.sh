@@ -21,6 +21,9 @@ function frp {
         wget --no-check-certificate https://raw.githubusercontent.com/clangcn/onekey-install-shell/master/frps/install-frps.sh -O ./install-frps.sh
         chmod 700 ./install-frps.sh
         ./install-frps.sh install
+
+        echo "Frp server is installed! "
+        
     elif [[ "$input" == "no" || "$input" == "n" ]]; then
         echo "Start install frp client"
         # 检查目标目录是否存在，如果不存在则创建
@@ -94,20 +97,20 @@ EOF
         sudo systemctl daemon-reload
         sudo systemctl enable frpc.service
         sudo systemctl restart frpc.service
-        sudo systemctl status frpc.service    
+        sudo systemctl status frpc.service
+
+        # 检查是否存在此任务
+        crontab -l | grep -q 'systemctl restart frpc.service &> /dev/null'
+        if [ $? -ne 0 ]; then
+          # 如果不存在，则添加任务
+          (crontab -l; echo '0 */2 * * * systemctl restart frpc.service &> /dev/null') | crontab -
+          echo "0 */2 * * * systemctl restart frpc.service 任务已添加到 root 的 crontab 中。"
+        else
+          echo "systemctl restart frpc.service 任务已存在于 root 的 crontab 中。"
+        fi
     else
         echo "输入无效，请输入 'yes' 或 'no'。"
         exit 1
-    fi
-
-    # 检查是否存在此任务
-    crontab -l | grep -q 'systemctl restart frpc.service &> /dev/null'
-    if [ $? -ne 0 ]; then
-      # 如果不存在，则添加任务
-      (crontab -l; echo '0 */2 * * * systemctl restart frpc.service &> /dev/null') | crontab -
-      echo "0 */2 * * * systemctl restart frpc.service 任务已添加到 root 的 crontab 中。"
-    else
-      echo "systemctl restart frpc.service 任务已存在于 root 的 crontab 中。"
     fi
 }
 
